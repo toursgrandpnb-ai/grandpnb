@@ -464,7 +464,91 @@ function InquiryForm({ onComplete }: { onComplete: () => void }) {
       // Prepare subject line
       const arrivalText = formData.arrivalDate || "TBD";
       const departureText = formData.departureDate || "TBD";
-      const subject = `New inquiry - ${formData.name} - ${arrivalText} to ${departureText}`;
+      const subject = `New Inquiry: ${formData.name} | ${arrivalText} to ${departureText}`;
+
+      // Build formatted HTML email body
+      const emailBody = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0; padding: 0; color: #333;">
+          <div style="background: #124c3c; padding: 32px 24px; text-align: center;">
+            <h1 style="color: #fff; margin: 0; font-size: 24px; font-weight: 600;">New Travel Inquiry</h1>
+            <p style="color: #e6eadc; margin: 8px 0 0; font-size: 14px;">Grand P & B - Sri Lanka</p>
+          </div>
+
+          <div style="padding: 32px 24px; background: #f9f9f9;">
+            <div style="background: #fff; border-radius: 8px; padding: 24px; margin-bottom: 20px; border-left: 4px solid #124c3c;">
+              <h2 style="margin: 0 0 16px; font-size: 18px; color: #124c3c;">Contact Information</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666; width: 140px;">Name:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Email:</td>
+                  <td style="padding: 8px 0;"><a href="mailto:${formData.email}" style="color: #124c3c; text-decoration: none;">${formData.email}</a></td>
+                </tr>
+                ${formData.phone ? `<tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Phone/WhatsApp:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.phone}</td>
+                </tr>` : ''}
+                ${formData.country ? `<tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Country:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.country}</td>
+                </tr>` : ''}
+              </table>
+            </div>
+
+            <div style="background: #fff; border-radius: 8px; padding: 24px; margin-bottom: 20px; border-left: 4px solid #b19462;">
+              <h2 style="margin: 0 0 16px; font-size: 18px; color: #124c3c;">Travel Details</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666; width: 140px;">Arrival Date:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.arrivalDate || 'To be determined'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Departure Date:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.departureDate || 'To be determined'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Travellers:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.travellers}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666;">Accommodation:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.accommodation}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="background: #fff; border-radius: 8px; padding: 24px; margin-bottom: 20px; border-left: 4px solid #124c3c;">
+              <h2 style="margin: 0 0 16px; font-size: 18px; color: #124c3c;">Tour Preferences</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666; width: 140px;">Tour Interest:</td>
+                  <td style="padding: 8px 0; color: #333;">${formData.journey}</td>
+                </tr>
+                ${interests.length > 0 ? `<tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #666; vertical-align: top;">Experiences:</td>
+                  <td style="padding: 8px 0; color: #333;">${interests.join(', ')}</td>
+                </tr>` : ''}
+              </table>
+            </div>
+
+            ${formData.additionalInfo ? `<div style="background: #fff; border-radius: 8px; padding: 24px; border-left: 4px solid #b19462;">
+              <h2 style="margin: 0 0 12px; font-size: 18px; color: #124c3c;">Additional Information</h2>
+              <p style="margin: 0; line-height: 1.6; color: #555; white-space: pre-wrap;">${formData.additionalInfo}</p>
+            </div>` : ''}
+          </div>
+
+          <div style="background: #f6f4ee; padding: 24px; text-align: center; border-top: 1px solid #dce3dd;">
+            <p style="margin: 0 0 12px; font-size: 14px; color: #666;">
+              <strong>Next Steps:</strong> Reply to this email to start the conversation with ${formData.name}
+            </p>
+            <p style="margin: 0; font-size: 12px; color: #999;">
+              Received via grandpnb.com on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </div>
+        </div>
+      `;
 
       // Prepare form data for Web3Forms
       const payload = {
@@ -474,18 +558,7 @@ function InquiryForm({ onComplete }: { onComplete: () => void }) {
         email: "grandpnb@mail.com",
         cc: "tours.grandpnb@gmail.com",
         replyto: formData.email,
-        "Visitor Name": formData.name,
-        "Visitor Email": formData.email,
-        "Phone / WhatsApp": formData.phone || "Not provided",
-        Country: formData.country || "Not specified",
-        "Arrival Date": formData.arrivalDate || "Not specified",
-        "Departure Date": formData.departureDate || "Not specified",
-        Travellers: formData.travellers,
-        "Accommodation Preference": formData.accommodation,
-        "Tour Interest": formData.journey,
-        Experiences: interests.join(", "),
-        "Additional Information":
-          formData.additionalInfo || "No additional information provided",
+        message: emailBody,
         botcheck: false,
       };
 
