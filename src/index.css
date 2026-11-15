@@ -1335,17 +1335,40 @@ footer {
   .hero {
     height: 100dvh;
     min-height: 100dvh;
-    padding: 0 20px 28px;
+    padding: 0 20px 20px;
     padding-top: 78px;
+    gap: 28px;
+  }
+  .hero-copy {
+    margin-top: 0;
   }
   .hero h1 {
-    font-size: 48px;
+    font-size: 38px;
+    line-height: 1.12;
+    margin: 8px 0 10px 0;
+    letter-spacing: -0.6px;
   }
   .hero-intro {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 100%;
+    margin-bottom: 14px;
+  }
+  .hero .button {
+    height: 44px;
+    font-size: 12px;
+    padding: 0 18px;
+    gap: 12px;
   }
   .eyebrow {
-    font-size: 9px;
+    font-size: 8.5px;
+    letter-spacing: 1.8px;
+  }
+  .hero-bottom {
+    gap: 14px;
+  }
+  .location {
+    font-size: 11px;
   }
   .scene-nav {
     gap: 8px;

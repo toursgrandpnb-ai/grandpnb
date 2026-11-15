@@ -284,16 +284,7 @@ function Hero({ onTour }: { onTour: () => void }) {
         <p className="eyebrow light">
           A SMALL ISLAND. AN EXTRAORDINARY JOURNEY.
         </p>
-        <h1
-          style={{
-            fontSize: "clamp(58px, 6.1vw, 88px)",
-            lineHeight: "0.99",
-            letterSpacing: "-1.8px",
-            margin: "24px 0",
-            fontFamily: "Cormorant Garamond, serif",
-            fontWeight: 500,
-          }}
-        >
+        <h1>
           Welcome to Sri Lanka.
           <br />
           Personalized journeys with Grand P & B.
@@ -786,6 +777,8 @@ function GuestCarousel() {
 function Home({ onView }: { onView: (v: View) => void }) {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const allGalleryImages = [
     ["lasting-memories/ancient.webp", "Ancient wonders", "Ancient temple ruins in Sri Lanka"],
@@ -838,25 +831,24 @@ function Home({ onView }: { onView: (v: View) => void }) {
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.95)",
+            background: "rgba(0, 0, 0, 0.98)",
             zIndex: 100,
             display: "flex",
-            flexDirection: "column",
-            padding: "20px"
+            flexDirection: "column"
           }}
-          onClick={() => setGalleryOpen(false)}
         >
+          {/* Close button */}
           <button
             style={{
               position: "absolute",
-              top: "20px",
-              right: "20px",
-              background: "#fff",
+              top: "16px",
+              right: "16px",
+              background: "rgba(255,255,255,0.95)",
               border: "none",
-              width: "44px",
-              height: "44px",
+              width: "40px",
+              height: "40px",
               borderRadius: "50%",
-              fontSize: "24px",
+              fontSize: "22px",
               cursor: "pointer",
               zIndex: 101
             }}
@@ -865,48 +857,58 @@ function Home({ onView }: { onView: (v: View) => void }) {
             ×
           </button>
 
-          <div style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "60px 20px 20px"
-          }}
-          onClick={(e) => e.stopPropagation()}>
+          {/* Image container with swipe support */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "60px 0 120px",
+              overflow: "hidden"
+            }}
+            onTouchStart={(e) => setTouchStart(e.targetTouches[0].clientX)}
+            onTouchMove={(e) => setTouchEnd(e.targetTouches[0].clientX)}
+            onTouchEnd={() => {
+              if (touchStart - touchEnd > 75) {
+                // Swiped left - next image
+                setSelectedImage((selectedImage + 1) % allGalleryImages.length);
+              }
+              if (touchStart - touchEnd < -75) {
+                // Swiped right - previous image
+                setSelectedImage((selectedImage + allGalleryImages.length - 1) % allGalleryImages.length);
+              }
+            }}
+          >
+            {/* Desktop arrows - hidden on mobile */}
             <button
               style={{
                 position: "absolute",
                 left: "20px",
                 background: "rgba(255,255,255,0.9)",
                 border: "none",
-                width: "52px",
-                height: "52px",
+                width: "48px",
+                height: "48px",
                 borderRadius: "50%",
-                fontSize: "28px",
-                cursor: "pointer"
+                fontSize: "24px",
+                cursor: "pointer",
+                display: window.innerWidth > 768 ? "block" : "none"
               }}
               onClick={() => setSelectedImage((selectedImage + allGalleryImages.length - 1) % allGalleryImages.length)}
             >
               ‹
             </button>
 
-            <div style={{ maxWidth: "90%", maxHeight: "80vh", textAlign: "center" }}>
-              <img
-                src={`${A}/${allGalleryImages[selectedImage][0]}`}
-                alt={allGalleryImages[selectedImage][2]}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "75vh",
-                  objectFit: "contain"
-                }}
-              />
-              <p style={{ color: "#fff", marginTop: "16px", fontSize: "16px" }}>
-                {allGalleryImages[selectedImage][1]}
-              </p>
-              <p style={{ color: "#ccc", marginTop: "8px", fontSize: "14px" }}>
-                {selectedImage + 1} / {allGalleryImages.length}
-              </p>
-            </div>
+            <img
+              src={`${A}/${allGalleryImages[selectedImage][0]}`}
+              alt={allGalleryImages[selectedImage][2]}
+              style={{
+                maxWidth: "calc(100% - 40px)",
+                maxHeight: "calc(100vh - 200px)",
+                objectFit: "contain",
+                userSelect: "none"
+              }}
+            />
 
             <button
               style={{
@@ -914,16 +916,74 @@ function Home({ onView }: { onView: (v: View) => void }) {
                 right: "20px",
                 background: "rgba(255,255,255,0.9)",
                 border: "none",
-                width: "52px",
-                height: "52px",
+                width: "48px",
+                height: "48px",
                 borderRadius: "50%",
-                fontSize: "28px",
-                cursor: "pointer"
+                fontSize: "24px",
+                cursor: "pointer",
+                display: window.innerWidth > 768 ? "block" : "none"
               }}
               onClick={() => setSelectedImage((selectedImage + 1) % allGalleryImages.length)}
             >
               ›
             </button>
+          </div>
+
+          {/* Bottom bar with caption and counter */}
+          <div style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)",
+            padding: "40px 20px 20px",
+            textAlign: "center"
+          }}>
+            <p style={{ color: "#fff", fontSize: "15px", marginBottom: "8px", fontWeight: 500 }}>
+              {allGalleryImages[selectedImage][1]}
+            </p>
+            <p style={{ color: "#aaa", fontSize: "13px" }}>
+              {selectedImage + 1} / {allGalleryImages.length}
+            </p>
+
+            {/* Mobile arrows at bottom */}
+            <div style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "20px",
+              marginTop: "16px"
+            }}>
+              <button
+                style={{
+                  background: "rgba(255,255,255,0.2)",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  fontSize: "20px",
+                  color: "#fff",
+                  cursor: "pointer"
+                }}
+                onClick={() => setSelectedImage((selectedImage + allGalleryImages.length - 1) % allGalleryImages.length)}
+              >
+                ‹
+              </button>
+              <button
+                style={{
+                  background: "rgba(255,255,255,0.2)",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  fontSize: "20px",
+                  color: "#fff",
+                  cursor: "pointer"
+                }}
+                onClick={() => setSelectedImage((selectedImage + 1) % allGalleryImages.length)}
+              >
+                ›
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1055,15 +1115,26 @@ function Home({ onView }: { onView: (v: View) => void }) {
             </figure>
           ))}
         </div>
-        <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <div style={{ textAlign: "center", marginTop: "40px", borderTop: "1px solid rgba(255, 255, 255, 0.25)", paddingTop: "24px" }}>
           <button
-            className="button white"
+            style={{
+              border: 0,
+              background: "none",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              color: "#b8d4c7",
+              font: "600 13px 'DM Sans'",
+              cursor: "pointer",
+              margin: "0 auto",
+              gap: "12px"
+            }}
             onClick={() => {
               setSelectedImage(0);
               setGalleryOpen(true);
             }}
           >
-            View Full Gallery ({allGalleryImages.length} photos) <Arrow />
+            View full gallery ({allGalleryImages.length} photos) <Arrow />
           </button>
         </div>
       </section>
