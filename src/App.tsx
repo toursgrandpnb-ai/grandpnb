@@ -784,6 +784,37 @@ function GuestCarousel() {
 }
 
 function Home({ onView }: { onView: (v: View) => void }) {
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
+
+  const allGalleryImages = [
+    ["lasting-memories/ancient.webp", "Ancient wonders", "Ancient temple ruins in Sri Lanka"],
+    ["lasting-memories/waterfall.webp", "Highland journeys", "Waterfall in Sri Lankan highlands"],
+    ["lasting-memories/beach.webp", "Ocean days", "Golden beach on Sri Lanka's southern coast"],
+    ["lasting-memories/tea-country-morning.webp", "Tea country mornings", "Tea plantations in the misty highlands"],
+    ["lasting-memories/wildlife-safari-udawalawe.webp", "Wildlife encounters", "Elephants in Udawalawe National Park"],
+    ["lasting-memories/negambo.webp", "Coastal charm", "Negombo beach at sunset"],
+    ["lasting-memories/tharoushan-kandarajah-KtDXt7DyfVM-unsplash.webp", "Cultural heritage", "Traditional Sri Lankan temple architecture"],
+    ["lasting-memories/daniel-klein-Qx8_d5dGhrs-unsplash.webp", "Mountain adventures", "Hiking through Sri Lanka's mountain trails"],
+    ["lasting-memories/ceynic-outdoor-adventures-xDGZHExSdq4-unsplash.webp", "Scenic railways", "The famous train journey through hill country"],
+    ["lasting-memories/hayo-roskam-9oscr9ot0uw-unsplash.webp", "Peaceful moments", "Meditation and tranquility in nature"],
+    ["lasting-memories/hendrik-cornelissen-jpTT_SAU034-unsplash.webp", "Coastal beauty", "Palm-fringed beaches along the coast"],
+    ["lasting-memories/alex-azabache-hZhhVLLKJQ4-unsplash.webp", "Sacred sites", "Ancient Buddhist dagoba and temples"],
+    ["lasting-memories/thilina-alagiyawanna-L8fjA1j6wag-unsplash.webp", "Local life", "Authentic Sri Lankan cultural experiences"],
+    ["lasting-memories/thineshkumar-lingeswaran-m-wLjwSxeNQ-unsplash.webp", "Natural wonders", "Exploring Sri Lanka's diverse landscapes"],
+    ["lasting-memories/vlada-7-agpe5IB9s-unsplash.webp", "Ocean adventures", "Surfing and water sports on southern beaches"],
+    ["lasting-memories/geoff-brooks-3TwThGdEUZA-unsplash.webp", "Village charm", "Traditional village life and hospitality"],
+    ["lasting-memories/siarhei-palishchuk-um_LMDP8pSY-unsplash.webp", "Golden sunsets", "Watching the sun set over the Indian Ocean"],
+    ["lasting-memories/chanuka-nimsara-vJTKWsDIkQA-unsplash.webp", "Island paradise", "Tropical beauty and serene moments"],
+    ["lasting-memories/shainee-fernando-RdZ6t41NmE0-unsplash.webp", "Mountain vistas", "Breathtaking views from the highlands"],
+    ["lasting-memories/vlada-qktYFt7vte4-unsplash.webp", "Coastal escapes", "Relaxing by Sri Lanka's pristine shores"],
+    ["lasting-memories/udara-karunarathna-MXY2UUe1C4g-unsplash.webp", "Tea estates", "Walking through lush tea plantations"],
+    ["lasting-memories/dulana-kodithuwakku-P562lXSaebE-unsplash.webp", "Spiritual journey", "Pilgrimage sites and sacred places"],
+    ["lasting-memories/vasim-memon-98TDspjQa9I-unsplash.webp", "Nature trails", "Discovering Sri Lanka's rich biodiversity"],
+    ["lasting-memories/gemmmm-6GJGwKwTsLE-unsplash.webp", "Island gems", "Hidden treasures and secret spots"],
+    ["lasting-memories/isuru-ranasinha-Dt1NksEP_yY-unsplash.webp", "Tropical paradise", "Coconut groves and sandy beaches"],
+  ];
+
   return (
     <>
       <a href="#main-content" className="skip-to-main">
@@ -797,21 +828,120 @@ function Home({ onView }: { onView: (v: View) => void }) {
             ?.scrollIntoView({ behavior: "smooth" })
         }
       />
-      <section className="promises" id="main-content">
+
+      {/* Gallery Modal */}
+      {galleryOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.95)",
+            zIndex: 100,
+            display: "flex",
+            flexDirection: "column",
+            padding: "20px"
+          }}
+          onClick={() => setGalleryOpen(false)}
+        >
+          <button
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "#fff",
+              border: "none",
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              fontSize: "24px",
+              cursor: "pointer",
+              zIndex: 101
+            }}
+            onClick={() => setGalleryOpen(false)}
+          >
+            ×
+          </button>
+
+          <div style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "60px 20px 20px"
+          }}
+          onClick={(e) => e.stopPropagation()}>
+            <button
+              style={{
+                position: "absolute",
+                left: "20px",
+                background: "rgba(255,255,255,0.9)",
+                border: "none",
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                fontSize: "28px",
+                cursor: "pointer"
+              }}
+              onClick={() => setSelectedImage((selectedImage + allGalleryImages.length - 1) % allGalleryImages.length)}
+            >
+              ‹
+            </button>
+
+            <div style={{ maxWidth: "90%", maxHeight: "80vh", textAlign: "center" }}>
+              <img
+                src={`${A}/${allGalleryImages[selectedImage][0]}`}
+                alt={allGalleryImages[selectedImage][2]}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "75vh",
+                  objectFit: "contain"
+                }}
+              />
+              <p style={{ color: "#fff", marginTop: "16px", fontSize: "16px" }}>
+                {allGalleryImages[selectedImage][1]}
+              </p>
+              <p style={{ color: "#ccc", marginTop: "8px", fontSize: "14px" }}>
+                {selectedImage + 1} / {allGalleryImages.length}
+              </p>
+            </div>
+
+            <button
+              style={{
+                position: "absolute",
+                right: "20px",
+                background: "rgba(255,255,255,0.9)",
+                border: "none",
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                fontSize: "28px",
+                cursor: "pointer"
+              }}
+              onClick={() => setSelectedImage((selectedImage + 1) % allGalleryImages.length)}
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
+      <section className="promises" id="main-content" style={{ display: "none" }}>
         <h3>Not just a destination. A feeling.</h3>
         <span>⌁ Thoughtfully planned</span>
         <span>⌾ Locally guided</span>
         <span>♧ Made personal</span>
       </section>
-      <section className="section" id="tours">
+      <section className="section" id="tours" style={{ background: "#10392f", color: "#fff" }}>
         <div className="section-heading">
           <div>
-            <p className="eyebrow">THE GRAND P & B COLLECTION</p>
-            <h2>Five ways to fall for Sri Lanka.</h2>
+            <p className="eyebrow" style={{ color: "#e6eadc" }}>THE GRAND P & B COLLECTION</p>
+            <h2 style={{ color: "#fff" }}>Five ways to fall for Sri Lanka.</h2>
           </div>
-          <p>
+          <p style={{ color: "#d4ded5" }}>
             Choose your rhythm, from a fleeting escape to a deeper island
-            discovery. We’ll help make it yours.
+            discovery. We'll help make it yours.
           </p>
         </div>
         <div className="tour-grid">
@@ -868,7 +998,7 @@ function Home({ onView }: { onView: (v: View) => void }) {
         </div>
       </section>
       <section className="story" id="story">
-        <div className="story-image">
+        <div className="story-image" style={{ cursor: "pointer" }} onClick={() => window.open(mapImage, '_blank')}>
           <img
             src={mapImage}
             alt="Nine Arch Bridge in Ella"
@@ -876,7 +1006,6 @@ function Home({ onView }: { onView: (v: View) => void }) {
             loading="lazy"
           />
           <div>
-            <span>NINE ARCH BRIDGE, ELLA</span>
             <em>The beauty is in the journey.</em>
           </div>
         </div>
@@ -884,12 +1013,12 @@ function Home({ onView }: { onView: (v: View) => void }) {
           <p className="eyebrow">OUR STORY · A PERSONAL WELCOME</p>
           <h2>
             An island we call home.
-            <br />A journey you’ll call yours.
+            <br />A journey you'll call yours.
           </h2>
           <p>
             Grand P & B is a boutique Sri Lanka travel agency based in
             Weligalla. Our approach is personal: listen to the way you like to
-            travel, then bring the island’s landscapes, culture and everyday
+            travel, then bring the island's landscapes, culture and everyday
             moments together in a considered journey.
           </p>
           <p>
@@ -901,54 +1030,42 @@ function Home({ onView }: { onView: (v: View) => void }) {
         </div>
         <GuestCarousel />
       </section>
-      <section className="section gallery-section">
+      <section className="section gallery-section" style={{ background: "#10392f", color: "#fff" }}>
         <div className="section-heading">
           <div>
-            <p className="eyebrow">LITTLE MOMENTS, LASTING MEMORIES</p>
-            <h2>An island worth looking closer at.</h2>
+            <p className="eyebrow" style={{ color: "#e6eadc" }}>LITTLE MOMENTS, LASTING MEMORIES</p>
+            <h2 style={{ color: "#fff" }}>An island worth looking closer at.</h2>
           </div>
-          <p className="right-note">Destination inspiration</p>
+          <p className="right-note" style={{ color: "#d4ded5" }}>Click any image to view the full gallery</p>
         </div>
         <div className="gallery">
-          {[
-            [
-              "lasting-memories/ancient.webp",
-              "01 / Ancient wonders",
-              "Ancient temple ruins in Sri Lanka",
-            ],
-            [
-              "lasting-memories/waterfall.webp",
-              "02 / Highland journeys",
-              "Waterfall in Sri Lankan highlands",
-            ],
-            [
-              "lasting-memories/beach.webp",
-              "03 / Ocean days",
-              "Golden beach on Sri Lanka's southern coast",
-            ],
-            [
-              "lasting-memories/tea-country-morning.webp",
-              "04 / Tea country mornings",
-              "Tea plantations in the misty highlands",
-            ],
-          ].map(([img, label, altText]) => (
-            <figure key={label}>
+          {allGalleryImages.slice(0, 4).map(([img, label, altText], index) => (
+            <figure
+              key={label}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setSelectedImage(index);
+                setGalleryOpen(true);
+              }}
+            >
               <img src={`${A}/${img}`} alt={altText} loading="lazy" />
-              <figcaption>{label}</figcaption>
+              <figcaption style={{ color: "#c9d6ce" }}>
+                {String(index + 1).padStart(2, '0')} / {label}
+              </figcaption>
             </figure>
           ))}
         </div>
-        <blockquote style={{ display: "none" }}>
-          <span>TRAVELLER STORIES</span>
-          <p>
-            "The kind of journey that gives you time to take it all in — and
-            memories to take home."
-          </p>
-          <small>
-            Illustrative copy only, not a customer review. A genuine traveller
-            story will appear here with permission.
-          </small>
-        </blockquote>
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <button
+            className="button white"
+            onClick={() => {
+              setSelectedImage(0);
+              setGalleryOpen(true);
+            }}
+          >
+            View Full Gallery ({allGalleryImages.length} photos) <Arrow />
+          </button>
+        </div>
       </section>
       <section className="inquiry-section" id="inquiry">
         <div className="inquiry-copy">

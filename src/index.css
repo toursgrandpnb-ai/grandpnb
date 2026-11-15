@@ -406,32 +406,38 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: 2px;
 }
 .tour-card b {
   font: 500 12px "DM Sans";
-  color: var(--green);
+  color: #b8d4c7;
+  margin-bottom: 6px;
 }
 .tour-card h3 {
   font-size: 29px;
   line-height: 1.02;
-  min-height: 58px;
+  min-height: auto;
+  color: #fff;
+  margin: 0;
+  padding-bottom: 8px;
 }
 .tour-card p {
   font-size: 13px;
   line-height: 1.6;
-  color: var(--muted);
-  min-height: 62px;
+  color: #d4ded5;
+  min-height: auto;
+  margin: 0 0 12px 0;
+  padding: 0;
 }
 .tour-card button {
   border: 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
   background: none;
   padding: 14px 0 0;
   display: flex;
   justify-content: space-between;
-  color: var(--green);
-  font: 600 12px "DM Sans";
+  color: #b8d4c7;
+  font: 600 13px "DM Sans";
   margin-top: auto;
 }
 .tour-card button img {
@@ -444,19 +450,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  gap: 25px;
+  gap: 18px;
 }
 .bespoke > span {
   font-size: 32px;
+  color: var(--green);
+}
+.bespoke .eyebrow {
+  color: var(--green);
+  font-weight: 600;
 }
 .bespoke h3 {
   font-size: 38px;
   line-height: 1.08;
+  color: var(--ink);
+  font-weight: 600;
 }
 .bespoke > p:not(.eyebrow) {
   font-size: 15px;
   line-height: 1.7;
-  color: var(--muted);
+  color: var(--ink);
 }
 .story {
   padding: 88px clamp(24px, 5.55vw, 80px);
