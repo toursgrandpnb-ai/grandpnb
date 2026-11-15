@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react" ;
 
 const A = `${import.meta.env.BASE_URL}assets`;
 const mapImage = `${A}/welcome.webp`;
